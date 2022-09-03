@@ -1,4 +1,4 @@
-# Ad-text-generation-from-ad-pictures
+# Advertisement-text-generation-from-advertisement-pictures
 Short description:
 Analysis of advertisement image files to generate advertisement text with a transformer
 
