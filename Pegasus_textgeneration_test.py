@@ -22,6 +22,7 @@ def get_response(input_text, num_return_sequences):
   tgt_text = tokenizer.batch_decode(translated, skip_special_tokens=True)
   return tgt_text
 
+#Third test, now from VisualStudio Code
 #Another test for commit test 2
 #Test for a commit
 #test input sentence
