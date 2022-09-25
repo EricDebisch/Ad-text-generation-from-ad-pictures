@@ -5,13 +5,16 @@ from pip._vendor.distlib.util import CSVWriter
 import os
 from scipy.spatial import KDTree
 import webcolors
+import time
 
 def getPixelRGB(funcPixelWidth, funcPixelLength):
     #funcR, funcG, funcB = imageRGB.getpixel((funcPixelWidth,funcPixelLength))
     funcValueRGB = imageRGB.getpixel((funcPixelWidth,funcPixelLength))
     #print(funcR, funcG, funcB)
     #funcValueRGB = "(" + str(funcR)  + "," + str(funcG)  + "," + str(funcB) + ")"
-    convert_rgb_to_names(funcValueRGB)
+    #print(funcValueRGB)
+    return funcValueRGB
+    
     #csvPixelWriter.writerow([csvPixelCoordinate, csvValueRGB])
     
 def convert_rgb_to_names(func_rgb_tuple):
@@ -27,21 +30,30 @@ def convert_rgb_to_names(func_rgb_tuple):
     kdt_db = KDTree(rgb_values)
     
     distance, index = kdt_db.query(func_rgb_tuple)
-    print(names[index])
-    write_color_in_file(names[index])
+    #print(names[index])
+    return names[index]
 
-def write_color_in_file(funcColorName):
-    funcMetadataColorsContent = open(metadataFileColorPath, "w")
-    for colorValue in funcMetadataColorsContent:
-        if(funcColorName == colorValue):
+def write_color_in_file(funcColorName, funcMetadataFileColorPath):
+    duplicateColorCounter = 0
+    funcMetadataColorsContent = open(funcMetadataFileColorPath, "r")
+    for funcColorValue in funcMetadataColorsContent:
+        print(len(funcMetadataColorsContent.readlines()))
+        if(funcColorName == funcColorValue):
             duplicateColorCounter = duplicateColorCounter + 1
+        elif(funcColorValue == 0):
+            funcMetadataColorsContentWrite = open(funcMetadataFileColorPath, "a")
+            funcMetadataColorsContentWrite.write(funcColorName + "\n")
+            funcMetadataColorsContentWrite.close()
         else:
-            print("Color already in List")
-        
-    if(duplicateColorCounter != funcMetadataColorsContent.length):
-        metadataFileColorPath.writerow(funcColorName + ";")
+            print("Color not on the list")
+    
+    #print(funcMetadataColorsContent)
+    if(duplicateColorCounter < len(funcMetadataColorsContent.readlines())):
+        funcMetadataColorsContentWrite = open(funcMetadataFileColorPath, "a")
+        funcMetadataColorsContentWrite.write(funcColorName + "\n")
+        funcMetadataColorsContentWrite.close()
     funcMetadataColorsContent.close()
-
+    
 
 imagesPath = "C:/Users/Eric/Documents/FOM Studium/Bachelor-Thesis/Advertisement_Images/Web Crawling Images/images/fashion/H&M_Test"
 imagesPathFolders = os.listdir(imagesPath)
@@ -52,15 +64,18 @@ for imageFileName in imagesPathFolders:
     print(imageFullPath)
     metadataFileColorPath = imagesPath + "/" + "metadata_color_" + imageFileName.replace(".jpg","") + ".txt"
     #open(metadataFileColorPath, "w")
-    MetadataColorsContent = open(metadataFileColorPath, "w")
-    MetadataColorsContent.write("colorName\n")
+    MetadataColorsContent = open(metadataFileColorPath, "a")
+    #time.sleep(5)
+    #MetadataColorsContent.write("colorName;\n")
     MetadataColorsContent.close()
     image =  Image.open(imageFullPath)
     imageRGB = image.convert('RGB')
     for counterWidth in range(0, image.size[0], 1):
         for counterLength in range(0, image.size[1], 1):
-            getPixelRGB(counterWidth, counterLength)
-            print(counterLength, counterWidth)
+            valueRGB = getPixelRGB(counterWidth, counterLength)
+            colorName = convert_rgb_to_names(valueRGB)
+            write_color_in_file(colorName, metadataFileColorPath)
+            #print(counterLength, counterWidth)
 
 
 #csvPixelPath = "C:/Users/Eric/Documents/FOM Studium/Bachelor-Thesis/PixelDistribution.csv"
