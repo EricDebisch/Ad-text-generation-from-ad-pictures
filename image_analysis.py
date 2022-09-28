@@ -35,20 +35,25 @@ def convert_rgb_to_names(func_rgb_tuple):
 
 def write_color_in_file(funcColorName, funcMetadataFileColorPath):
     duplicateColorCounter = 0
+    #firstValueCounter = 0
+
     funcMetadataColorsContent = open(funcMetadataFileColorPath, "r")
+    print(funcColorName)
     for funcColorValue in funcMetadataColorsContent:
-        print(len(funcMetadataColorsContent.readlines()))
-        if(funcColorName == funcColorValue):
-            duplicateColorCounter = duplicateColorCounter + 1
-        elif(funcColorValue == 0):
+        print(funcColorValue)
+        if(funcMetadataColorsContent.readline() in ["\n", "\r\n"]):
             funcMetadataColorsContentWrite = open(funcMetadataFileColorPath, "a")
             funcMetadataColorsContentWrite.write(funcColorName + "\n")
             funcMetadataColorsContentWrite.close()
+            #firstValueCounter += 1
+            print("Hey, this is wrong")
+        elif(funcColorName == funcColorValue):
+            duplicateColorCounter = duplicateColorCounter + 1
+            print("LOL, duplicate")
         else:
             print("Color not on the list")
-    
-    #print(funcMetadataColorsContent)
-    if(duplicateColorCounter < len(funcMetadataColorsContent.readlines())):
+
+    if(duplicateColorCounter == 0 and funcMetadataColorsContent.readline() != funcColorName):
         funcMetadataColorsContentWrite = open(funcMetadataFileColorPath, "a")
         funcMetadataColorsContentWrite.write(funcColorName + "\n")
         funcMetadataColorsContentWrite.close()
