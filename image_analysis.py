@@ -1,11 +1,10 @@
 from multiprocessing.reduction import duplicate
 from PIL import Image, ImageFont, ImageDraw
-import csv
 from pip._vendor.distlib.util import CSVWriter
 import os
 from scipy.spatial import KDTree
 import webcolors
-import time
+import re
 
 #This function reads the RGB value for a specific pixel and returns the RGB value
 def getPixelRGB(funcPixelWidth, funcPixelLength):
@@ -26,42 +25,23 @@ def convert_rgb_to_names(func_rgb_tuple):
     kdt_db = KDTree(rgb_values)
     
     distance, index = kdt_db.query(func_rgb_tuple)
-    #print(names[index])
     return names[index]
+   
 
-#This function receives the colorname and the filepath to the metadata file and writes the colorname into the file, if the color is not already present in the file.
-def write_color_in_file(funcColorName, funcMetadataFileColorPath):
-    duplicateColorCounter = 0
-
-    funcMetadataColorsContent = open(funcMetadataFileColorPath, "r")
-    funcMetadataColorsContentLength = len(funcMetadataColorsContent.readlines())
-    print(funcMetadataColorsContentLength)
-    print("colorName = " + funcColorName)
-
-    #funcListColorNames = []
-    #funcListColorNamesLength =
-
-    for funcColorValue in funcMetadataColorsContent: #Issue: The funcColorValue is currently not beeing read. The textfile cannot be read.
-        print("readit" + funcColorValue)
-        if(funcColorName == funcColorValue):
-            duplicateColorCounter  += 1
-            print("duplicate here")
-        else:
-            print("Color not on the list")
-
-    if(duplicateColorCounter  == 0):
-        funcMetadataColorsContentWrite = open(funcMetadataFileColorPath, "a")
-        funcMetadataColorsContentWrite.write(funcColorName + "\n")
-        funcMetadataColorsContentWrite.close()
-    funcMetadataColorsContent.close()
-    
-
-listColorNames = []
+listColorNames = [] #List for colornames, that are in the metadata file
+listImagesInFolder = [] #List for only jpg or jpeg files in the target foler. All other file types will be ignored
+regexImageFile = ".+\.jpe?g" #Reguluar expression for a file name with .jpg or jpeg file extension
 imagesPath = "C:/Users/Eric/Documents/FOM Studium/Bachelor-Thesis/Advertisement_Images/Web Crawling Images/images/fashion/H&M_Test" #Path to the folder to read all images - Adjustment (optional): Recursive to search in subfolders too
 imagesPathFolders = os.listdir(imagesPath) #Lists the imagefile names in the specified folder
+print(imagesPathFolders)
+#Loop to add only jpg or jpeg files to the list
+for imagePathFolder in imagesPathFolders:
+    if(re.match(regexImageFile, imagePathFolder)):
+        listImagesInFolder.append(imagePathFolder)
 
+print(listImagesInFolder)
 #For loop to go through every imagefile to read the pixels
-for imageFileName in imagesPathFolders:
+for imageFileName in listImagesInFolder:
     print(imageFileName)
     imageFullPath = imagesPath + "/" + imageFileName #Creates the full pathname to the image file
     print(imageFullPath)
@@ -81,7 +61,7 @@ for imageFileName in imagesPathFolders:
             listColorNamesLength = len(listColorNames)
            #print(listColorNamesLength)
             if(listColorNamesLength == 0):
-               listColorNames.append(colorName) #Issue: Second textfile is empty and does not contain any colors. Please test with smaller image size. Process time is 17 seconds for 10 x 1000 pixels
+               listColorNames.append(colorName)
                metadataColorsContentWrite = open(metadataFileColorPath, "a")
                metadataColorsContentWrite.write(colorName + "\n")
                metadataColorsContentWrite.close()
@@ -99,7 +79,3 @@ for imageFileName in imagesPathFolders:
                     metadataColorsContentWrite = open(metadataFileColorPath, "a")
                     metadataColorsContentWrite.write(colorName + "\n")
                     metadataColorsContentWrite.close()
-                #print(duplicateColorCounter)
-
-
-            #write_color_in_file(colorName, metadataFileColorPath) #Opens the function to write the colorname into the metadata file
