@@ -5,6 +5,8 @@ import os
 from scipy.spatial import KDTree
 import webcolors
 import re
+import torch
+
 
 #This function reads the RGB value for a specific pixel and returns the RGB value
 def getPixelRGB(funcPixelWidth, funcPixelLength):
@@ -26,7 +28,32 @@ def convert_rgb_to_names(func_rgb_tuple):
     
     distance, index = kdt_db.query(func_rgb_tuple)
     return names[index]
-   
+
+#Function to detect the objects on the iamge with YOLOv5 and writing tthe detected objects in a textfile
+def detect_objects(funcImagePathObjectDetection, funcMetadataFileObjects, ):
+    # Model
+    model = torch.hub.load('ultralytics/yolov5', 'yolov5s')  # or yolov5n - yolov5x6, custom
+
+    # Images
+    img = funcImagePathObjectDetection  # or file, Path, PIL, OpenCV, numpy, list
+
+    # Inference
+    results = model(img)
+
+    # Results
+    #results.print()  # or .show(), .save(), .crop(), .pandas(), etc.
+    #print(results.pandas().xyxy[0])
+    separateDetectecObjects = json.loads(results.pandas().xyxy[0].to_json(orient="records"))
+    print(separateDetectecObjects)
+    regexNamePattern = "(?<=\'name\':\s\')(.*?)(?=\'\})"
+    listDetectedObjectsFull = re.findall(regexNamePattern, str(separateDetectecObjects))
+    listDetectedObjectsReduced = list(dict.fromkeys(listDetectedObjectsFull) )
+    print(listDetectedObjectsReduced)
+
+    funcMetadataObjectsFile = open(funcMetadataFileObjects, "a")
+    for detectedObjectReduced in listDetectedObjectsReduced:
+        funcMetadataObjectsFile.write(str(detectedObjectReduced) + "\n")
+    funcMetadataObjectsFile.close
 
 listColorNames = [] #List for colornames, that are in the metadata file
 listImagesInFolder = [] #List for only jpg or jpeg files in the target foler. All other file types will be ignored
@@ -46,6 +73,9 @@ for imageFileName in listImagesInFolder:
     imageFullPath = imagesPath + "/" + imageFileName #Creates the full pathname to the image file
     print(imageFullPath)
     metadataFileColorPath = imagesPath + "/" + "metadata_color_" + imageFileName.replace(".jpg","") + ".txt" #Creates the full path to the metadata_color file for the specific image
+    metadataFileObjectsPath = imagesPath + "/" + imageFileName.replace(".jpg","") + "_metadata_objects" + ".txt" #Creates the full path to the metadata_color file for the specific image
+    detect_objects(imageFullPath, metadataFileColorPath) #Detects the objects contained in the image file
+    
     MetadataColorsContent = open(metadataFileColorPath, "a") #Creates a metadata textfile
     MetadataColorsContent.close() #Closing the textfile. Will be opened later
     image =  Image.open(imageFullPath) #Opens the imagefile with all information like, image resolution
