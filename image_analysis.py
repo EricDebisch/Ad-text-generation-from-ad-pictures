@@ -6,7 +6,7 @@ from scipy.spatial import KDTree
 import webcolors
 import re
 import torch
-
+import json
 
 #This function reads the RGB value for a specific pixel and returns the RGB value
 def getPixelRGB(funcPixelWidth, funcPixelLength):
@@ -30,7 +30,7 @@ def convert_rgb_to_names(func_rgb_tuple):
     return names[index]
 
 #Function to detect the objects on the iamge with YOLOv5 and writing tthe detected objects in a textfile
-def detect_objects(funcImagePathObjectDetection, funcMetadataFileObjects, ):
+def detect_objects(funcImagePathObjectDetection, funcMetadataFileObjects):
     # Model
     model = torch.hub.load('ultralytics/yolov5', 'yolov5s')  # or yolov5n - yolov5x6, custom
 
@@ -50,15 +50,21 @@ def detect_objects(funcImagePathObjectDetection, funcMetadataFileObjects, ):
     listDetectedObjectsReduced = list(dict.fromkeys(listDetectedObjectsFull) )
     print(listDetectedObjectsReduced)
 
-    funcMetadataObjectsFile = open(funcMetadataFileObjects, "a")
+    #return listDetectedObjectsReduced
+    
+    print("path is " + str(funcMetadataFileObjects))
     for detectedObjectReduced in listDetectedObjectsReduced:
+        funcMetadataObjectsFile = open(funcMetadataFileObjects, "a")
+        print("The loop was entered, Person" + str(detectedObjectReduced))
         funcMetadataObjectsFile.write(str(detectedObjectReduced) + "\n")
-    funcMetadataObjectsFile.close
+        funcMetadataObjectsFile.close
+    return
 
 listColorNames = [] #List for colornames, that are in the metadata file
 listImagesInFolder = [] #List for only jpg or jpeg files in the target foler. All other file types will be ignored
+detectedObjectsOnImage = []
 regexImageFile = ".+\.jpe?g" #Reguluar expression for a file name with .jpg or jpeg file extension
-imagesPath = "C:/Users/Eric/Documents/FOM Studium/Bachelor-Thesis/Advertisement_Images/Web Crawling Images/images/fashion/H&M_Test" #Path to the folder to read all images - Adjustment (optional): Recursive to search in subfolders too
+imagesPath = "C:/Users/Eric/Documents/FOM Studium/Bachelor-Thesis/Advertisement_Images/Web Crawling Images/images/fashion/H&M" #Path to the folder to read all images - Adjustment (optional): Recursive to search in subfolders too
 imagesPathFolders = os.listdir(imagesPath) #Lists the imagefile names in the specified folder
 print(imagesPathFolders)
 #Loop to add only jpg or jpeg files to the list
@@ -72,17 +78,33 @@ for imageFileName in listImagesInFolder:
     print(imageFileName)
     imageFullPath = imagesPath + "/" + imageFileName #Creates the full pathname to the image file
     print(imageFullPath)
-    metadataFileColorPath = imagesPath + "/" + "metadata_color_" + imageFileName.replace(".jpg","") + ".txt" #Creates the full path to the metadata_color file for the specific image
+    metadataFileColorPath = imagesPath + "/" +  imageFileName.replace(".jpg","") + "_metadata_color" + ".txt" #Creates the full path to the metadata_color file for the specific image
     metadataFileObjectsPath = imagesPath + "/" + imageFileName.replace(".jpg","") + "_metadata_objects" + ".txt" #Creates the full path to the metadata_color file for the specific image
-    detect_objects(imageFullPath, metadataFileColorPath) #Detects the objects contained in the image file
+
     
     MetadataColorsContent = open(metadataFileColorPath, "a") #Creates a metadata textfile
     MetadataColorsContent.close() #Closing the textfile. Will be opened later
+    MetadataObjectsContent = open(metadataFileObjectsPath, "a") #Creates a metadata textfile
+    MetadataObjectsContent.close() #Closing the textfile. Will be opened later
+
+    detect_objects(imageFullPath, metadataFileObjectsPath) #Detects the objects contained in the image file
+    #detectedObjectsOnImage = detect_objects(imageFullPath, metadataFileObjectsPath) #Detects the objects contained in the image file
+    #MetadataObjectsFile = open(metadataFileObjectsPath, "a")
+    #print("The objects are: " + str(detectedObjectsOnImage))
+    #MetadataObjectsFile.write(str(detectedObjectsOnImage) + "\n")
+    #MetadataObjectsFile.close
+
+    #for detectedObjectReduced in detectedObjectsOnImage:
+     #   MetadataObjectsFile = open(metadataFileObjectsPath, "a")
+      #  print("The loop was entered, Person" + str(detectedObjectReduced))
+       # MetadataObjectsFile.write(str(detectedObjectReduced) + "\n")
+        #MetadataObjectsFile.close
+
     image =  Image.open(imageFullPath) #Opens the imagefile with all information like, image resolution
     imageRGB = image.convert('RGB') #Converts the imgage pixels to the RGB value
 
     #Two loop that through each pixel. The first for loop for the width, the secend for loop for the length. Both parameters combined result to a specific pixel on the image
-    for counterWidth in range(0, image.size[0], 1):
+    for counterWidth in range(0, image.size[0], 10):
         for counterLength in range(0, image.size[1], 1):
             valueRGB = getPixelRGB(counterWidth, counterLength) #Opens the function to read the RGB value for the pixel
             colorName = convert_rgb_to_names(valueRGB) #Opens the function to convert the rgb value to a colorname that is the closest to the RGB value
