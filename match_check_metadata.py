@@ -12,7 +12,7 @@ listImagesInFolder = [] #List for only jpg or jpeg files in the target foler. Al
 listInputTextForPegasus = []
 listInputTextForBLEURT = []
 regexImageFile = ".+\.jpe?g" #Reguluar expression for a file name with .jpg or jpeg file extension
-imagesPath = "C:/Users/Eric/Documents/FOM Studium/Bachelor-Thesis/Advertisement_Images/Web Crawling Images/images/fashion/H&M" #Path to the folder to read all images - Adjustment (optional): Recursive to search in subfolders too
+imagesPath = "C:/Users/Eric/Documents/FOM Studium/Bachelor-Thesis/Advertisement_Images/Web Crawling Images/images/Testrun_00" #Path to the folder to read all images - Adjustment (optional): Recursive to search in subfolders too
 imagesPathFolders = os.listdir(imagesPath) #Lists the imagefile names in the specified folder
 print(imagesPathFolders)
 #Loop to add only jpg or jpeg files to the list
@@ -61,12 +61,15 @@ for imageFileName in listImagesInFolder:
     metadataFileZeroShotTextPath = imagesPath + "/" + imageFileName.replace(".jpg","") + "_metadata_zero-shot_text.txt"
     metadataFileZeroShotText = open(metadataFileZeroShotTextPath, "r")
 
-    if(matchObjectPercentage >= matchingPercentageThreshhold):
-        listInputTextForPegasus.append(metadataFileZeroShotText.readline())
+    if matchObjectPercentage >= matchingPercentageThreshhold:
+        print("Read Line for Pegasus: " + str(metadataFileZeroShotText.readline()))
+        listInputTextForPegasus.append(str(metadataFileZeroShotText.readline()))
 
     else:
-        listInputTextForBLEURT.append(metadataFileZeroShotText.readline())
+        print(metadataFileZeroShotText.readline())
+        listInputTextForBLEURT.append(str(metadataFileZeroShotText.readline()))
     
+
 
     sourceImageMetadataObjects.close()
     sourceImageMetadataColor.close()
@@ -74,6 +77,8 @@ for imageFileName in listImagesInFolder:
     referenceMetadataColor.close()
     metadataFileZeroShotText.close()
     
+    print("Pegasus Texts: " + str(listInputTextForPegasus))
+    print("BLEURT Texts: " + str(listInputTextForBLEURT))
 
 
 
