@@ -88,17 +88,6 @@ for imageFileName in listImagesInFolder:
     MetadataObjectsContent.close() #Closing the textfile. Will be opened later
 
     detect_objects(imageFullPath, metadataFileObjectsPath) #Detects the objects contained in the image file
-    #detectedObjectsOnImage = detect_objects(imageFullPath, metadataFileObjectsPath) #Detects the objects contained in the image file
-    #MetadataObjectsFile = open(metadataFileObjectsPath, "a")
-    #print("The objects are: " + str(detectedObjectsOnImage))
-    #MetadataObjectsFile.write(str(detectedObjectsOnImage) + "\n")
-    #MetadataObjectsFile.close
-
-    #for detectedObjectReduced in detectedObjectsOnImage:
-     #   MetadataObjectsFile = open(metadataFileObjectsPath, "a")
-      #  print("The loop was entered, Person" + str(detectedObjectReduced))
-       # MetadataObjectsFile.write(str(detectedObjectReduced) + "\n")
-        #MetadataObjectsFile.close
 
     image =  Image.open(imageFullPath) #Opens the imagefile with all information like, image resolution
     imageRGB = image.convert('RGB') #Converts the imgage pixels to the RGB value

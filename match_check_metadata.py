@@ -1,10 +1,13 @@
 import os
 import re
+import codecs
 
-sourceImagePath = "C:/Users/Eric/Documents/FOM Studium/Bachelor-Thesis/Advertisement_Images/Web Crawling Images/images/fashion/H&M/18894.jpg"
+sourceImagePath = "C:/Users/Eric/Documents/FOM Studium/Bachelor-Thesis/Advertisement_Images/Web Crawling Images/images/Testrun_00/18894.jpg"
 sourceImageMetadataObjectsPath = sourceImagePath.replace(".jpg","_metadata_objects.txt"  )
 sourceImageMetadataColorsPath = sourceImagePath.replace(".jpg","_metadata_color.txt"  )
-
+textInputPegasusFile = sourceImagePath.replace(".jpg","_input_text_pegasus.txt"  )
+textInputBLEURTFile = sourceImagePath.replace(".jpg","_input_text_bleurt.txt"  )
+print(sourceImageMetadataObjectsPath)
 matchingPercentageThreshhold = 0.5
 
 listColorNames = [] #List for colornames, that are in the metadata file
@@ -14,6 +17,11 @@ listInputTextForBLEURT = []
 regexImageFile = ".+\.jpe?g" #Reguluar expression for a file name with .jpg or jpeg file extension
 imagesPath = "C:/Users/Eric/Documents/FOM Studium/Bachelor-Thesis/Advertisement_Images/Web Crawling Images/images/Testrun_00" #Path to the folder to read all images - Adjustment (optional): Recursive to search in subfolders too
 imagesPathFolders = os.listdir(imagesPath) #Lists the imagefile names in the specified folder
+print(textInputPegasusFile)
+textInputPegasus = open(textInputPegasusFile, "w")
+textInputPegasus.close()
+textInputBLEURT = open(textInputBLEURTFile, "w")
+textInputBLEURT.close()
 print(imagesPathFolders)
 #Loop to add only jpg or jpeg files to the list
 for imagePathFolder in imagesPathFolders:
@@ -63,11 +71,25 @@ for imageFileName in listImagesInFolder:
 
     if matchObjectPercentage >= matchingPercentageThreshhold:
         print("Read Line for Pegasus: " + str(metadataFileZeroShotText.readline()))
-        listInputTextForPegasus.append(str(metadataFileZeroShotText.readline()))
+        #
+        inputTextForPegasus = str(metadataFileZeroShotText.readline(0))
+        print("Read Line for Pegasus: " + str(inputTextForPegasus))
+        with open(metadataFileZeroShotTextPath, "r") as zeroshotFile, open(textInputPegasusFile, "a") as textInputPegasus:
+            #zeroshotFile.decode("utf-16")
+            for line in zeroshotFile:
+                #line.decode("utf-16")
+                inputPegasus = line + str("\n")
+                print("Okay, the line is: " + str(line))
+                listInputTextForPegasus.append(str(line))
+                textInputPegasus.write(inputPegasus)
+                #textInputPegasus.close()
 
     else:
         print(metadataFileZeroShotText.readline())
         listInputTextForBLEURT.append(str(metadataFileZeroShotText.readline()))
+        textInputBLEURT = open(textInputBLEURTFile, "a")
+        textInputBLEURT.write(metadataFileZeroShotText.readline())
+        textInputBLEURT.close()
     
 
 
@@ -76,9 +98,6 @@ for imageFileName in listImagesInFolder:
     referenceMetadataObjects.close()
     referenceMetadataColor.close()
     metadataFileZeroShotText.close()
-    
-    print("Pegasus Texts: " + str(listInputTextForPegasus))
-    print("BLEURT Texts: " + str(listInputTextForBLEURT))
 
-
-
+print("Pegasus Texts: " + str(listInputTextForPegasus))
+print("BLEURT Texts: " + str(listInputTextForBLEURT))
