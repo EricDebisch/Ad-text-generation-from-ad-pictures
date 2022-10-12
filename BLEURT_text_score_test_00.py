@@ -21,6 +21,7 @@ candidates = ["Book now"]
 #The current score would indicate a random output without context. By the first look, book now could be a fitting text for a picture of a beach in the context of a travel advertisement.
 #The exact evaluation of the score by BLEURT needs to be evaluated, if only longer sentences are scored higher than short sentences.
 #The script scores.py needed to use int64 input tokens as described in https://github.com/yongchanghao/bleurt/commit/e2a36c2bc9bbaef2d18b04eff105fc65466a55ad
+print(len(references))
 
 scorer = score.BleurtScorer(checkpoint)
 scores = scorer.score(references=references, candidates=candidates)
