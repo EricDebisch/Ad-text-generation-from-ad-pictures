@@ -51,14 +51,16 @@ def __evaluate_Pegasus_text_with_BLEURT__(funcListInputTextForBLEURT, funcListGe
     scores = scorer.score(references=references, candidates=candidates)
     assert type(scores) == list and len(scores) > 0
     print(scores)
+    return scores
 
 inputSentencesBLEURT = ""
 generatedPegasusText = []
-sourceImagePath = "C:/Users/Eric/Documents/FOM Studium/Bachelor-Thesis/Advertisement_Images/Web Crawling Images/images/Testrun_00/18894.jpg"
+sourceImagePath = "C:/Users/Eric/Documents/FOM Studium/Bachelor-Thesis/Advertisement_Images/Web Crawling Images/images/Testrun_00/18901.jpg"
 sourceImageMetadataObjectsPath = sourceImagePath.replace(".jpg","_metadata_objects.txt"  )
 sourceImageMetadataColorsPath = sourceImagePath.replace(".jpg","_metadata_color.txt"  )
 textInputPegasusFile = sourceImagePath.replace(".jpg","_input_text_pegasus.txt"  )
 textInputBLEURTFile = sourceImagePath.replace(".jpg","_input_text_bleurt.txt"  )
+scoresBLEURTFile = sourceImagePath.replace(".jpg","_scores_bleurt.txt"  )
 print(sourceImageMetadataObjectsPath)
 matchingPercentageThreshhold = 0.5
 
@@ -163,4 +165,8 @@ listGeneratedPegasusText = []
 while len(listGeneratedPegasusText) < len(listInputTextForBLEURT):
     listGeneratedPegasusText.append(generatedPegasusText)
 print("generated Text is: " + str(listGeneratedPegasusText))
-__evaluate_Pegasus_text_with_BLEURT__(listInputTextForBLEURT, listGeneratedPegasusText)
+scoresBLEURT =  __evaluate_Pegasus_text_with_BLEURT__(listInputTextForBLEURT, listGeneratedPegasusText)
+
+scoresBLEURTValue = open(scoresBLEURTFile, "a")
+scoresBLEURTValue.write(str(scoresBLEURT))
+scoresBLEURTValue.close()
