@@ -55,7 +55,7 @@ def __evaluate_Pegasus_text_with_BLEURT__(funcListInputTextForBLEURT, funcListGe
 
 inputSentencesBLEURT = ""
 generatedPegasusText = []
-sourceImagePath = "C:/Users/Eric/Documents/FOM Studium/Bachelor-Thesis/Advertisement_Images/Web Crawling Images/images/Testrun_00/18901.jpg"
+sourceImagePath = "C:/Users/Eric/Documents/FOM Studium/Bachelor-Thesis/Advertisement_Images/Web Crawling Images/images/Testrun_00_prototype/18893.jpg"
 sourceImageMetadataObjectsPath = sourceImagePath.replace(".jpg","_metadata_objects.txt"  )
 sourceImageMetadataColorsPath = sourceImagePath.replace(".jpg","_metadata_color.txt"  )
 textInputPegasusFile = sourceImagePath.replace(".jpg","_input_text_pegasus.txt"  )
@@ -69,7 +69,7 @@ listImagesInFolder = [] #List for only jpg or jpeg files in the target foler. Al
 listInputTextForPegasus = []
 listInputTextForBLEURT = []
 regexImageFile = ".+\.jpe?g" #Reguluar expression for a file name with .jpg or jpeg file extension
-imagesPath = "C:/Users/Eric/Documents/FOM Studium/Bachelor-Thesis/Advertisement_Images/Web Crawling Images/images/Testrun_00" #Path to the folder to read all images - Adjustment (optional): Recursive to search in subfolders too
+imagesPath = "C:/Users/Eric/Documents/FOM Studium/Bachelor-Thesis/Advertisement_Images/Web Crawling Images/images/Testrun_00_prototype" #Path to the folder to read all images - Adjustment (optional): Recursive to search in subfolders too
 imagesPathFolders = os.listdir(imagesPath) #Lists the imagefile names in the specified folder
 print(textInputPegasusFile)
 textInputPegasus = open(textInputPegasusFile, "w")
@@ -84,16 +84,22 @@ for imagePathFolder in imagesPathFolders:
 
 for imageFileName in listImagesInFolder:
     matchCounterObject = 0
-    atchObjectPercentage = 0
+    matchObjectPercentage = 0
+    matchCounterColor = 0
+    matchColorPercentage = 0
     print("image Name: " + str(imageFileName))
     imageFullPath = imagesPath + "/" + imageFileName #Creates the full pathname to the image file
     #print(imageFullPath)
     metadataFileColorPath = imagesPath + "/" +  imageFileName.replace(".jpg","") + "_metadata_color" + ".txt" #Creates the full path to the metadata_color file for the specific image
     metadataFileObjectsPath = imagesPath + "/" + imageFileName.replace(".jpg","") + "_metadata_objects" + ".txt" #Creates the full path to the metadata_color file for the specific image
 
+
     sourceImageMetadataObjects = open(sourceImageMetadataObjectsPath, "r")
     sourceImageMetadataColor = open(sourceImageMetadataColorsPath, "r")
 
+    referenceMetadataObjects = open(metadataFileObjectsPath, "r")
+    referenceMetadataColor = open(metadataFileColorPath, "r")
+    #------Part to estimate the object matching percentage for the images------
     referenceMetadataObjects = open(metadataFileObjectsPath, "r")
     referenceMetadataColor = open(metadataFileColorPath, "r")
 
@@ -109,21 +115,48 @@ for imageFileName in listImagesInFolder:
             else:
                 i = 0
                 #print("No match")
-            
+    
+
     referenceMetadataObjectsLengthRead = open(metadataFileObjectsPath, "r").readlines()
     referenceMetadataObjectsLength = len(referenceMetadataObjectsLengthRead)
-    #print(referenceMetadataObjectsLength)
+    #print(referenceMetadataColorLength)
     if(referenceMetadataObjectsLength > 0):
         matchObjectPercentage = matchCounterObject / referenceMetadataObjectsLength
     else:
         matchObjectPercentage = 1
-    
-    print("Matching Percentage is: " + str(matchObjectPercentage) )
+
+#------Part to estimate the color matching percentage for the images------   
+    for lineSourceColor in sourceImageMetadataColor:        
+        for lineReferenceColor in referenceMetadataColor:
+            print("Source Object: " + str(lineSourceColor))
+            print("Reference Object: " + str(lineReferenceColor))
+            if(lineSourceColor == lineReferenceColor):
+                matchCounterColor += 1
+                print("Match found in the color")
+                print(matchCounterColor)
+                break
+            else:
+                i = 0
+                #print("No match")
+            
+    referenceMetadataColorLengthRead = open(metadataFileColorPath, "r").readlines()
+    referenceMetadataColorLength = len(referenceMetadataColorLengthRead)
+    #print(referenceMetadataColorLength)
+    if(referenceMetadataColorLength > 0):
+        matchColorPercentage = matchCounterColor / referenceMetadataColorLength
+    else:
+        matchColorPercentage = 1
+
+    matchColorAndObjectPercentage = (matchColorPercentage + matchColorPercentage) / 2
+
+    print("Matching Percentage Object is: " + str(matchObjectPercentage) )
+    print("Matching Percentage Color is: " + str(matchColorPercentage) )
+    print("Matching Percentage overall is: " + str(matchColorAndObjectPercentage) )
     
     metadataFileZeroShotTextPath = imagesPath + "/" + imageFileName.replace(".jpg","") + "_metadata_zero-shot_text.txt"
     metadataFileZeroShotText = open(metadataFileZeroShotTextPath, "r")
 
-    if matchObjectPercentage >= matchingPercentageThreshhold:
+    if matchColorAndObjectPercentage >= matchingPercentageThreshhold:
         print("Read Line for Pegasus: " + str(metadataFileZeroShotText.readline()))
         #
         inputTextForPegasus = str(metadataFileZeroShotText.readline(0))
@@ -168,5 +201,6 @@ print("generated Text is: " + str(listGeneratedPegasusText))
 scoresBLEURT =  __evaluate_Pegasus_text_with_BLEURT__(listInputTextForBLEURT, listGeneratedPegasusText)
 
 scoresBLEURTValue = open(scoresBLEURTFile, "a")
+scoresBLEURTValue.write(str(generatedPegasusText + "\n"))
 scoresBLEURTValue.write(str(scoresBLEURT))
 scoresBLEURTValue.close()

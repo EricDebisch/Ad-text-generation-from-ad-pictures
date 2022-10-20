@@ -64,7 +64,7 @@ listColorNames = [] #List for colornames, that are in the metadata file
 listImagesInFolder = [] #List for only jpg or jpeg files in the target foler. All other file types will be ignored
 detectedObjectsOnImage = []
 regexImageFile = ".+\.jpe?g" #Reguluar expression for a file name with .jpg or jpeg file extension
-imagesPath = "C:/Users/Eric/Documents/FOM Studium/Bachelor-Thesis/Advertisement_Images/Web Crawling Images/images/fashion/H&M" #Path to the folder to read all images - Adjustment (optional): Recursive to search in subfolders too
+imagesPath = "C:/Users/Eric/Documents/FOM Studium/Bachelor-Thesis/Advertisement_Images/Web Crawling Images/images/fashion/collection_cleaned_texts" #Path to the folder to read all images - Adjustment (optional): Recursive to search in subfolders too
 imagesPathFolders = os.listdir(imagesPath) #Lists the imagefile names in the specified folder
 print(imagesPathFolders)
 #Loop to add only jpg or jpeg files to the list
