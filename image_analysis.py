@@ -64,7 +64,7 @@ listColorNames = [] #List for colornames, that are in the metadata file
 listImagesInFolder = [] #List for only jpg or jpeg files in the target foler. All other file types will be ignored
 detectedObjectsOnImage = []
 regexImageFile = ".+\.jpe?g" #Reguluar expression for a file name with .jpg or jpeg file extension
-imagesPath = "C:/Users/Eric/Documents/FOM Studium/Bachelor-Thesis/Advertisement_Images/Web Crawling Images/images/fashion/collection_cleaned_texts" #Path to the folder to read all images - Adjustment (optional): Recursive to search in subfolders too
+imagesPath = "C:/Users/Eric/Documents/FOM Studium/Bachelor-Thesis/Advertisement_Images/Web Crawling Images/images/Testrun_00_colorobjects" #Path to the folder to read all images - Adjustment (optional): Recursive to search in subfolders too
 imagesPathFolders = os.listdir(imagesPath) #Lists the imagefile names in the specified folder
 print(imagesPathFolders)
 #Loop to add only jpg or jpeg files to the list
@@ -75,6 +75,7 @@ for imagePathFolder in imagesPathFolders:
 print(listImagesInFolder)
 #For loop to go through every imagefile to read the pixels
 for imageFileName in listImagesInFolder:
+    listColorNames = []
     print(imageFileName)
     imageFullPath = imagesPath + "/" + imageFileName #Creates the full pathname to the image file
     print(imageFullPath)
@@ -91,19 +92,21 @@ for imageFileName in listImagesInFolder:
 
     image =  Image.open(imageFullPath) #Opens the imagefile with all information like, image resolution
     imageRGB = image.convert('RGB') #Converts the imgage pixels to the RGB value
-
+ 
     #Two loop that through each pixel. The first for loop for the width, the secend for loop for the length. Both parameters combined result to a specific pixel on the image
-    for counterWidth in range(0, image.size[0], 10):
+    for counterWidth in range(0, image.size[0], 1):
         for counterLength in range(0, image.size[1], 1):
             valueRGB = getPixelRGB(counterWidth, counterLength) #Opens the function to read the RGB value for the pixel
             colorName = convert_rgb_to_names(valueRGB) #Opens the function to convert the rgb value to a colorname that is the closest to the RGB value
             duplicateColorCounter = 0
             print(counterWidth, counterLength)
             listColorNamesLength = len(listColorNames)
+            print(colorName)
            #print(listColorNamesLength)
             if(listColorNamesLength == 0):
                listColorNames.append(colorName)
                metadataColorsContentWrite = open(metadataFileColorPath, "a")
+               #print(colorName)
                metadataColorsContentWrite.write(colorName + "\n")
                metadataColorsContentWrite.close()
             else:               
