@@ -36,3 +36,24 @@ boxplot(bleurt_scores_fashion_numeric)
 #Dislpaying the frequency and difference between generated Pegasus texts
 table(pegasus_texts_automobile$pegasus_texts)
 table(pegasus_texts_fashion$pegasus_texts)
+
+#Correlation of pegasus inputs and bleurt mean
+plot(overview_automobile$mean_bleurt_scores ~ overview_automobile$count_pegasus_input)
+plot(overview_automobile$mean_bleurt_scores ~ overview_automobile$count_bleurt_input)
+
+plot(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_pegasus_input)
+plot(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_bleurt_input)
+
+testline <- plot(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_bleurt_input)
+lines(testline, fitted(linreg), col = "blue")
+linreg <- lm(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_pegasus_input)
+
+testmodell <- lm(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_pegasus_input)
+koeff.testmodell <- coef(testmodell)
+plot(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_pegasus_input)
+abline(coef = koeff.testmodell)
+
+testmodellauto <- lm(overview_automobile$mean_bleurt_scores ~ overview_automobile$count_pegasus_input)
+koeff.testmodell <- coef(testmodell)
+plot(overview_automobile$mean_bleurt_scores ~ overview_automobile$count_pegasus_input)
+abline(coef = koeff.testmodell)
