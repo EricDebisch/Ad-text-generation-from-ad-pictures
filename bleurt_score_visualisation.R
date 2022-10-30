@@ -4,16 +4,16 @@ library(psych)
 library(readxl)
 #-------Start Import Files-------
 #Import of the BLEURT score csv-files
-bluert_scores_automobile <- read.csv2("C:\\Users\\Eric\\Documents\\FOM Studium\\Bachelor-Thesis\\finishe_data_evaluation\\Testrun_00_automobile_finished\\evaluation_representation\\BLEURT_scores_automobile.csv", header = TRUE, sep = ";")
-bluert_scores_fashion <- read.csv2("C:\\Users\\Eric\\Documents\\FOM Studium\\Bachelor-Thesis\\finishe_data_evaluation\\Testrun_00_fashion_finished\\evaluation_representation\\BLEURT_scores_fashion.csv", header = TRUE, sep = ";")
+bluert_scores_automobile <- read.csv2("C:\\Users\\Eric\\Documents\\FOM Studium\\Bachelor-Thesis\\finished_data_evaluation_2022-10-30\\Testrun_00_automobile_finished\\evaluation_representation\\BLEURT_scores_automobile.csv", header = TRUE, sep = ";")
+bluert_scores_fashion <- read.csv2("C:\\Users\\Eric\\Documents\\FOM Studium\\Bachelor-Thesis\\finished_data_evaluation_2022-10-30\\Testrun_00_fashion_finished\\evaluation_representation\\BLEURT_scores_fashion.csv", header = TRUE, sep = ";")
 
 #Import of the generated Pegasus texts
-pegasus_texts_automobile <- read.csv2("C:\\Users\\Eric\\Documents\\FOM Studium\\Bachelor-Thesis\\finishe_data_evaluation\\Testrun_00_automobile_finished\\evaluation_representation\\PEGASUS_texts_automobile.csv", header = TRUE, sep = ";")
-pegasus_texts_fashion <- read.csv2("C:\\Users\\Eric\\Documents\\FOM Studium\\Bachelor-Thesis\\finishe_data_evaluation\\Testrun_00_fashion_finished\\evaluation_representation\\PEGASUS_texts_fashion.csv", header = TRUE, sep = ";")
+pegasus_texts_automobile <- read.csv2("C:\\Users\\Eric\\Documents\\FOM Studium\\Bachelor-Thesis\\finished_data_evaluation_2022-10-30\\Testrun_00_automobile_finished\\evaluation_representation\\PEGASUS_texts_automobile.csv", header = TRUE, sep = ";")
+pegasus_texts_fashion <- read.csv2("C:\\Users\\Eric\\Documents\\FOM Studium\\Bachelor-Thesis\\finished_data_evaluation_2022-10-30\\Testrun_00_fashion_finished\\evaluation_representation\\PEGASUS_texts_fashion.csv", header = TRUE, sep = ";")
 
 #Import of the overview files
-overview_automobile = read.csv2("C:\\Users\\Eric\\Documents\\FOM Studium\\Bachelor-Thesis\\finishe_data_evaluation\\Testrun_00_automobile_finished\\evaluation_representation\\overview_text_evaluation_automobile.csv", header = TRUE, sep = ";")
-overview_fashion = read.csv2("C:\\Users\\Eric\\Documents\\FOM Studium\\Bachelor-Thesis\\finishe_data_evaluation\\Testrun_00_fashion_finished\\evaluation_representation\\overview_text_evaluation_fashion.csv", header = TRUE, sep = ";")
+overview_automobile = read.csv2("C:\\Users\\Eric\\Documents\\FOM Studium\\Bachelor-Thesis\\finished_data_evaluation_2022-10-30\\Testrun_00_automobile_finished\\evaluation_representation\\overview_text_evaluation_automobile.csv", header = TRUE, sep = ";")
+overview_fashion = read.csv2("C:\\Users\\Eric\\Documents\\FOM Studium\\Bachelor-Thesis\\finished_data_evaluation_2022-10-30\\Testrun_00_fashion_finished\\evaluation_representation\\overview_text_evaluation_fashion.csv", header = TRUE, sep = ";")
 
 #/-------End Import Files-------
 
@@ -44,6 +44,14 @@ plot(overview_automobile$mean_bleurt_scores ~ overview_automobile$count_bleurt_i
 plot(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_pegasus_input)
 plot(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_bleurt_input)
 
+#Mean of used texts for BLEURT and Pegasus
+mean(overview_automobile$count_bleurt_input)
+mean(overview_automobile$count_pegasus_input)
+
+mean(overview_fashion$count_bleurt_input)
+mean(overview_fashion$count_pegasus_input)
+
+#Linear regression of used pegasus texts to distribution
 testline <- plot(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_bleurt_input)
 lines(testline, fitted(linreg), col = "blue")
 linreg <- lm(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_pegasus_input)
