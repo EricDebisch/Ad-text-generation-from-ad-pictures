@@ -61,16 +61,23 @@ mean(overview_fashion$count_bleurt_input)
 mean(overview_fashion$count_pegasus_input)
 
 #Linear regression of used pegasus texts to distribution
-testline <- plot(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_bleurt_input)
-lines(testline, fitted(linreg), col = "blue")
-linreg <- lm(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_pegasus_input)
-
-testmodell <- lm(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_pegasus_input)
-koeff.testmodell <- coef(testmodell)
+testmodellfashion <- lm(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_pegasus_input)
+koeff.testmodellfashion <- coef(testmodellfashion)
 plot(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_pegasus_input)
-abline(coef = koeff.testmodell)
+abline(coef = koeff.testmodellfashion)
+
+
 
 testmodellauto <- lm(overview_automobile$mean_bleurt_scores ~ overview_automobile$count_pegasus_input)
-koeff.testmodell <- coef(testmodell)
+koeff.testmodellauto <- coef(testmodellauto)
 plot(overview_automobile$mean_bleurt_scores ~ overview_automobile$count_pegasus_input)
-abline(coef = koeff.testmodell)
+abline(coef = koeff.testmodellauto)
+
+df <- data.frame(x=c(overview_automobile$count_pegasus_input),
+                 y=c(overview_automobile$mean_bleurt_scores),
+                 z=c(overview_automobile$pegaus_text))
+#create scatterplot
+plot(df$x, df$y)
+
+#add labels to every point
+text(df$x, df$y, labels=df$z)
