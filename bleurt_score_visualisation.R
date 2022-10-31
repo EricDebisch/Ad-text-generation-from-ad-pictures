@@ -25,9 +25,18 @@ bleurt_scores_fashion_numeric <- as.numeric(bluert_scores_fashion$bluert_score_v
 str(bleurt_scores_automobile_numeric)
 str(bleurt_scores_fashion_numeric)
 
+bleurt_scores_automobile_numeric
+names(bluert_scores_automobile$bluert_score_values)
 #Displaying the mean of the numeric BLEURT scores
 mean(bleurt_scores_automobile_numeric)
 mean(bleurt_scores_fashion_numeric)
+
+median(bleurt_scores_automobile_numeric)
+median(bleurt_scores_fashion_numeric)
+
+quantile(bleurt_scores_automobile_numeric)
+quantile(bleurt_scores_fashion_numeric)
+
 
 #Displaying a boxplot model of the numeric values
 boxplot(bleurt_scores_automobile_numeric)
