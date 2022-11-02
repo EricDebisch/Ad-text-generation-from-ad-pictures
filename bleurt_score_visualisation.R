@@ -31,6 +31,9 @@ names(bluert_scores_automobile$bluert_score_values)
 mean(bleurt_scores_automobile_numeric)
 mean(bleurt_scores_fashion_numeric)
 
+plot(bleurt_scores_automobile_numeric)
+plot(bleurt_scores_fashion_numeric)
+
 median(bleurt_scores_automobile_numeric)
 median(bleurt_scores_fashion_numeric)
 
@@ -45,6 +48,15 @@ boxplot(bleurt_scores_fashion_numeric)
 #Dislpaying the frequency and difference between generated Pegasus texts
 table(pegasus_texts_automobile$pegasus_texts)
 table(pegasus_texts_fashion$pegasus_texts)
+
+
+view_pegasus_distribution <- data.frame(
+  x=overview_automobile$pegaus_text
+  y=overview_automobile$mean_bleurt_scores
+)
+View(view_pegasus_distribution)
+
+plot(overview_automobile$pegaus_text ~ overview_automobile$mean_bleurt_scores)
 
 #Correlation of pegasus inputs and bleurt mean
 plot(overview_automobile$mean_bleurt_scores ~ overview_automobile$count_pegasus_input)
