@@ -1,5 +1,5 @@
-$sourcePath = "C:\Users\Eric\Documents\FOM Studium\Bachelor-Thesis\finishe_data_evaluation\Testrun_00_fashion_finished\*"
-$targetPath = "C:\Users\Eric\Documents\FOM Studium\Bachelor-Thesis\finishe_data_evaluation\Testrun_00_fashion_finished\evaluation_representation\BLEURT_scores_fashion.csv"
+$sourcePath = "C:\Users\Eric\Documents\FOM Studium\Bachelor-Thesis\finishe_data_evaluation\Testrun_00_fashion_automobile_combined_finished\*"
+$targetPath = "C:\Users\Eric\Documents\FOM Studium\Bachelor-Thesis\finishe_data_evaluation\Testrun_00_fashion_automobile_combined_finished\evaluation_representation\BLEURT_scores_fashion.csv"
 
 $bleurtScoreFiles = Get-ChildItem -Path $sourcePath -Include "*_scores_bleurt.txt"
 $counterID = 0
