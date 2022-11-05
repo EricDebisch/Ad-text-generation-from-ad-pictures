@@ -60,7 +60,7 @@ boxplot(bleurt_scores_automobile_fashion_combined_numeric)
 #Dislpaying the frequency and difference between generated Pegasus texts
 table(pegasus_texts_automobile$pegasus_texts)
 table(pegasus_texts_fashion$pegasus_texts)
-table(pegasus_texts_automobile_fashion_combined)
+table(pegasus_texts_automobile_fashion_combined$pegasus_texts)
 
 #Correlation of pegasus inputs and bleurt mean
 plot(overview_automobile$mean_bleurt_scores ~ overview_automobile$count_pegasus_input)
