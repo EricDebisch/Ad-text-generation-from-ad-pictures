@@ -2,6 +2,8 @@
 library(mosaic)
 library(psych)
 library(readxl)
+library(ggplot2)
+library(stringr)
 #-------Start Import Files-------
 #Import of the BLEURT score csv-files
 bluert_scores_automobile <- read.csv2("C:\\Users\\Eric\\Documents\\FOM Studium\\Bachelor-Thesis\\finished_data_evaluation_2022-10-30\\Testrun_00_automobile_finished\\evaluation_representation\\BLEURT_scores_automobile.csv", header = TRUE, sep = ";")
@@ -57,15 +59,56 @@ boxplot(bleurt_scores_automobile_numeric)
 boxplot(bleurt_scores_fashion_numeric)
 boxplot(bleurt_scores_automobile_fashion_combined_numeric)
 
+boxplot(bleurt_scores_automobile_numeric,bleurt_scores_fashion_numeric, bleurt_scores_automobile_fashion_combined_numeric,
+        main = "Boxplots nach Branchen",
+        ylab = "BLEURT Bewertungen",
+        names = c("Automobile", "Fashion", "Beide kombiniert"))
+
 #Dislpaying the frequency and difference between generated Pegasus texts
 table(pegasus_texts_automobile$pegasus_texts)
 table(pegasus_texts_fashion$pegasus_texts)
 table(pegasus_texts_automobile_fashion_combined$pegasus_texts)
 
+par(mar=c(11,4,4,4))
+barplot(table(pegasus_texts_automobile$pegasus_texts), horiz =  FALSE,
+        main = "Häufigkeit der Pegasustexte Automobil Branche",
+        xlab = "Generierte Texte",
+        ylab = "Häufigkeit der selben Texte",
+        las = 2,
+        cex.names = 0.8
+        )
+
+
+barplot(table(pegasus_texts_fashion$pegasus_texts), horiz =  FALSE,
+        main = "Häufigkeit der Pegasustexte Fashion Branche",
+        xlab = "Generierte Texte",
+        ylab = "Häufigkeit der selben Texte"
+)
+
+barplot(table(pegasus_texts_automobile_fashion_combined$pegasus_texts), horiz =  FALSE,
+        main = "Häufigkeit der Pegasustexte Branchen kombinierte",
+        xlab = "Generierte Texte",
+        ylab = "Häufigkeit der selben Texte"
+)
+
 #Correlation of pegasus inputs and bleurt mean
-plot(overview_automobile$mean_bleurt_scores ~ overview_automobile$count_pegasus_input)
-plot(overview_automobile$mean_bleurt_scores ~ overview_automobile$count_bleurt_input)
-plot(overview_automobile_fashion_combined$mean_bleurt_scores ~ overview_automobile_fashion_combined$count_pegasus_input)
+plot(overview_automobile$mean_bleurt_scores ~ overview_automobile$count_pegasus_input,
+     main = "Streudiagramm Automobil Branche",
+     xlab = "Anzahl Eingangstexte für Pegasus",
+     ylab = "Durchschnittliches BLEURT Ergebnis"
+     )
+
+plot(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_pegasus_input,
+     main = "Streudiagramm Fashion Branche",
+     xlab = "Anzahl Eingangstexte für Pegasus",
+     ylab = "Durchschnittliches BLEURT Ergebnis"
+)
+
+plot(overview_automobile_fashion_combined$mean_bleurt_scores ~ overview_automobile_fashion_combined$count_pegasus_input,
+     main = "Streudiagramm Fashion Branche",
+     xlab = "Anzahl Eingangstexte für Pegasus",
+     ylab = "Durchschnittliches BLEURT Ergebnis"
+)
 
 #Mean of used texts for BLEURT and Pegasus
 mean(overview_automobile$count_bleurt_input)
@@ -80,15 +123,27 @@ mean(overview_automobile_fashion_combined$count_pegasus_input)
 #Linear regression of used pegasus texts to distribution
 testmodellfashion <- lm(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_pegasus_input)
 koeff.testmodellfashion <- coef(testmodellfashion)
-plot(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_pegasus_input)
+plot(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_pegasus_input,
+     main = "Streudiagramm Automobil Branche",
+     xlab = "Anzahl Eingangstexte für Pegasus",
+     ylab = "Durchschnittliches BLEURT Ergebnis"
+     )
 abline(coef = koeff.testmodellfashion)
 
 testmodellauto <- lm(overview_automobile$mean_bleurt_scores ~ overview_automobile$count_pegasus_input)
 koeff.testmodellauto <- coef(testmodellauto)
-plot(overview_automobile$mean_bleurt_scores ~ overview_automobile$count_pegasus_input)
+plot(overview_automobile$mean_bleurt_scores ~ overview_automobile$count_pegasus_input,
+     main = "Streudiagramm Fashion Branche",
+     xlab = "Anzahl Eingangstexte für Pegasus",
+     ylab = "Durchschnittliches BLEURT Ergebnis"
+     )
 abline(coef = koeff.testmodellauto)
 
 testmodellautomobilefashion <- lm(overview_automobile_fashion_combined$mean_bleurt_scores ~ overview_automobile_fashion_combined$count_pegasus_input)
 koeff.testmodellautomobilefashion <- coef(testmodellautomobilefashion)
-plot(overview_automobile_fashion_combined$mean_bleurt_scores ~ overview_automobile_fashion_combined$count_pegasus_input)
+plot(overview_automobile_fashion_combined$mean_bleurt_scores ~ overview_automobile_fashion_combined$count_pegasus_input,
+     main = "Streudiagramm Fashion Branche",
+     xlab = "Anzahl Eingangstexte für Pegasus",
+     ylab = "Durchschnittliches BLEURT Ergebnis"
+     )
 abline(coef = koeff.testmodellautomobilefashion)
