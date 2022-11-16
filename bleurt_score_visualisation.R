@@ -70,7 +70,7 @@ table(pegasus_texts_fashion$pegasus_texts)
 table(pegasus_texts_automobile_fashion_combined$pegasus_texts)
 
 par(mar=c(11,4,4,4))
-barplot(table(pegasus_texts_automobile$pegasus_texts), horiz =  FALSE,
+barplot(table(pegasus_texts_automobile$pegasus_texts), horiz =  TRUE,
         main = "Häufigkeit der Pegasustexte Automobil Branche",
         xlab = "Generierte Texte",
         ylab = "Häufigkeit der selben Texte",
