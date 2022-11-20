@@ -34,7 +34,8 @@ str(bleurt_scores_automobile_fashion_combined_numeric)
 
 bleurt_scores_automobile_numeric
 names(bluert_scores_automobile$bluert_score_values)
-#Displaying the mean of the numeric BLEURT scores
+
+#Displaying the mean value of the BLEURT scores
 mean(bleurt_scores_automobile_numeric)
 mean(bleurt_scores_fashion_numeric)
 mean(bleurt_scores_automobile_fashion_combined_numeric)
@@ -45,9 +46,20 @@ median(bleurt_scores_fashion_numeric)
 median(bleurt_scores_automobile_fashion_combined_numeric)
 
 #Displaying the scatterplot of the numeric BLEURT scores
-plot(bleurt_scores_automobile_numeric)
-plot(bleurt_scores_fashion_numeric)
-plot(bleurt_scores_automobile_fashion_combined_numeric)
+plot(bleurt_scores_automobile_numeric,
+     main = "BLEURT Ergebnisse Automobil Branche",
+     ylab = "BLEURT Bewertungen",
+     xlab = "ID des Datenpunktes")
+
+plot(bleurt_scores_fashion_numeric,
+     main = "BLEURT Ergebnisse Fashion Branche",
+     ylab = "BLEURT Bewertungen",
+     xlab = "ID des Datenpunktes")
+
+plot(bleurt_scores_automobile_fashion_combined_numeric,
+     main = "BLEURT Ergebnisse beide Branchen kombiniert",
+     ylab = "BLEURT Bewertungen",
+     xlab = "ID des Datenpunktes")
 
 #Displaying the quantiles of the numeric BLEURT scores
 quantile(bleurt_scores_automobile_numeric)
@@ -91,22 +103,22 @@ barplot(table(pegasus_texts_automobile_fashion_combined$pegasus_texts), horiz = 
         ylab = "Häufigkeit der selben Texte"
 )
 
-#Correlation of pegasus inputs and bleurt mean
+#Correlation of Pegasus inputs and bleurt mean
 plot(overview_automobile$mean_bleurt_scores ~ overview_automobile$count_pegasus_input,
      main = "Streudiagramm Automobil Branche",
-     xlab = "Anzahl Eingangstexte für Pegasus",
+     xlab = "Anzahl der Eingangstexte für Pegasus",
      ylab = "Durchschnittliches BLEURT Ergebnis"
      )
 
 plot(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_pegasus_input,
      main = "Streudiagramm Fashion Branche",
-     xlab = "Anzahl Eingangstexte für Pegasus",
+     xlab = "Anzahl der Eingangstexte für Pegasus",
      ylab = "Durchschnittliches BLEURT Ergebnis"
 )
 
 plot(overview_automobile_fashion_combined$mean_bleurt_scores ~ overview_automobile_fashion_combined$count_pegasus_input,
-     main = "Streudiagramm Fashion Branche",
-     xlab = "Anzahl Eingangstexte für Pegasus",
+     main = "Streudiagramm beide Branchen kombiniert",
+     xlab = "Anzahl der Eingangstexte für Pegasus",
      ylab = "Durchschnittliches BLEURT Ergebnis"
 )
 
@@ -121,29 +133,36 @@ mean(overview_automobile_fashion_combined$count_bleurt_input)
 mean(overview_automobile_fashion_combined$count_pegasus_input)
 
 #Linear regression of used pegasus texts to distribution
-testmodellfashion <- lm(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_pegasus_input)
-koeff.testmodellfashion <- coef(testmodellfashion)
-plot(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_pegasus_input,
-     main = "Streudiagramm Automobil Branche",
-     xlab = "Anzahl Eingangstexte für Pegasus",
-     ylab = "Durchschnittliches BLEURT Ergebnis"
-     )
-abline(coef = koeff.testmodellfashion)
-
 testmodellauto <- lm(overview_automobile$mean_bleurt_scores ~ overview_automobile$count_pegasus_input)
 koeff.testmodellauto <- coef(testmodellauto)
 plot(overview_automobile$mean_bleurt_scores ~ overview_automobile$count_pegasus_input,
-     main = "Streudiagramm Fashion Branche",
+     main = "Lineare Regression Automobil Branche",
      xlab = "Anzahl Eingangstexte für Pegasus",
      ylab = "Durchschnittliches BLEURT Ergebnis"
      )
 abline(coef = koeff.testmodellauto)
 
+
+testmodellfashion <- lm(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_pegasus_input)
+koeff.testmodellfashion <- coef(testmodellfashion)
+plot(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_pegasus_input,
+     main = "Lineare Regression Fashion Branche",
+     xlab = "Anzahl Eingangstexte für Pegasus",
+     ylab = "Durchschnittliches BLEURT Ergebnis"
+)
+abline(coef = koeff.testmodellfashion)
+
+
 testmodellautomobilefashion <- lm(overview_automobile_fashion_combined$mean_bleurt_scores ~ overview_automobile_fashion_combined$count_pegasus_input)
 koeff.testmodellautomobilefashion <- coef(testmodellautomobilefashion)
 plot(overview_automobile_fashion_combined$mean_bleurt_scores ~ overview_automobile_fashion_combined$count_pegasus_input,
-     main = "Streudiagramm Fashion Branche",
+     main = "Lineare Regression beide Branchen kombiniert",
      xlab = "Anzahl Eingangstexte für Pegasus",
      ylab = "Durchschnittliches BLEURT Ergebnis"
      )
 abline(coef = koeff.testmodellautomobilefashion)
+
+#Linear regression values of BLEURT score to amount of input texts for pegasus 
+lm(overview_automobile$mean_bleurt_scores ~ overview_automobile$count_pegasus_input)
+lm(overview_fashion$mean_bleurt_scores ~ overview_fashion$count_pegasus_input)
+lm(overview_automobile_fashion_combined$mean_bleurt_scores ~ overview_automobile_fashion_combined$count_pegasus_input)
